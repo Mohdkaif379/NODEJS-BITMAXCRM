@@ -1,0 +1,4 @@
+# Auxly - AI Task Management (internal data)
+.auxly/
+config.bat
+node_modules
