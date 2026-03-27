@@ -53,6 +53,7 @@ router.post(
   requireFields(["full_name", "email", "password"]),
   adminController.createAdmin
 );
+<<<<<<< HEAD
 router.get("/all", authAdmin, adminController.listAdmins);
 // Self profile (no id in route) - id taken from JWT `sub`
 router.get("/profile", authAdmin, validateAuthSubObjectId, adminController.getAdmin);
@@ -60,6 +61,15 @@ router.get("/profile", authAdmin, validateAuthSubObjectId, adminController.getAd
 router.put(
   "/update",
   authAdmin,
+=======
+router.get("/all", adminController.listAdmins);
+// Self profile (no id in route) - id taken from JWT `sub`
+router.get("/profile", validateAuthSubObjectId, adminController.getAdmin);
+
+router.put(
+  "/update",
+  
+>>>>>>> 1e2257454a544ba55f81be5f72876985fa230494
   validateAuthSubObjectId,
   upload.fields([
     { name: "profile_photo", maxCount: 1 },
@@ -71,7 +81,11 @@ router.put(
 );
 // Optional: update by id
 
+<<<<<<< HEAD
 router.delete("/delete", authAdmin, validateAuthSubObjectId, adminController.deleteAdmin);
+=======
+router.delete("/delete", validateAuthSubObjectId, adminController.deleteAdmin);
+>>>>>>> 1e2257454a544ba55f81be5f72876985fa230494
 
 router.use((err, _req, res, next) => {
   if (!err) return next();

@@ -9,6 +9,10 @@ const employeeRoutes = require("./module/admin/employee/employee.route");
 const attendenceRoutes = require("./module/admin/Attendence/attendence.route");
 const evaluationReportRoutes = require("./module/admin/evaluation/evaluationreport.route");
 const expenseRoutes = require("./module/admin/expense/expense.route");
+<<<<<<< HEAD
+=======
+const interviewRoutes = require("./module/admin/interview/interview.route");
+>>>>>>> 1e2257454a544ba55f81be5f72876985fa230494
 
 const app = express();
 
@@ -29,6 +33,11 @@ app.use("/api/employees", employeeRoutes);
 app.use("/api/attendence", attendenceRoutes);
 app.use("/api/evaluationreports", evaluationReportRoutes);
 app.use("/api/expenses", expenseRoutes);
+<<<<<<< HEAD
+=======
+app.use("/api/interviews", interviewRoutes);
+
+>>>>>>> 1e2257454a544ba55f81be5f72876985fa230494
 
 const PORT = process.env.PORT || 3000;
 
