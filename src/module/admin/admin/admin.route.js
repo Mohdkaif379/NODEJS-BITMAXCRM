@@ -4,7 +4,7 @@ const adminController = require("./admin.controller");
 const stripPrivilegedAdminFields = require("../../../core/middleware/stripPrivilegedAdminFields");
 const requireFields = require("../../../core/middleware/requireFields");
 const validateObjectIdParam = require("../../../core/middleware/validateObjectIdParam");
-// const authAdmin = require("../../../core/middleware/authAdmin");
+const authAdmin = require("../../../core/middleware/authAdmin");
 const validateAuthSubObjectId = require("../../../core/middleware/validateAuthSubObjectId");
 
 const router = express.Router();
