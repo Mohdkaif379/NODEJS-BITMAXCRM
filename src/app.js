@@ -11,6 +11,7 @@ const evaluationReportRoutes = require("./module/admin/evaluation/evaluationrepo
 const expenseRoutes = require("./module/admin/expense/expense.route");
 const interviewRoutes = require("./module/admin/interview/interview.route");
 const hrmisRoutes = require("./module/admin/HR mis Report/hrmis.route");
+const tourConveyanceRoutes  = require("./module/admin/tour conveyance/tourConveyance.routes");
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use("/api/evaluationreports", evaluationReportRoutes);
 app.use("/api/expenses", expenseRoutes);
 app.use("/api/interviews", interviewRoutes);
 app.use("/api/hrmis", hrmisRoutes);
+app.use("/api/tours", tourConveyanceRoutes);
 
 
 const PORT = process.env.PORT || 3000;
