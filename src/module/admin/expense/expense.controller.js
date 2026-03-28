@@ -1,80 +1,112 @@
-const expenseService = require("./expense.service");
+const {
+  createExpenseService,
+  getAllExpensesService,
+  getSingleExpenseService,
+  updateExpenseService,
+  deleteExpenseService,
+} = require("./expense.service");
 
-function sendError(res, err) {
-  const statusCode = err?.statusCode || 500;
-  const message = err?.message || "Internal Server Error";
-  return res.status(statusCode).json({ status: false, message });
-}
-
-async function index(req, res) {
+// CREATE
+const createExpenseController = async (req, res) => {
   try {
-    const result = await expenseService.listExpenses(req.query);
-    return res.status(200).json({
-      status: true,
-      message: "Expenses fetched successfully.",
-      data: result.data,
-      pagination: result.pagination
-    });
-  } catch (err) {
-    return sendError(res, err);
-  }
-}
+    const adminId = req.auth?.sub; // ✅ FIXED
+    console.log("AUTH DATA:", req.auth);
 
-async function store(req, res) {
-  try {
-    const expense = await expenseService.createExpense(req.body, req.auth);
-    return res.status(201).json({
-      status: true,
-      message: "Expense created successfully.",
-      data: expense
-    });
-  } catch (err) {
-    return sendError(res, err);
-  }
-}
+    if (!adminId) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized: Admin ID not found",
+      });
+    }
 
-async function show(req, res) {
-  try {
-    const expense = await expenseService.getExpenseById(req.params.id);
-    return res.status(200).json({
-      status: true,
-      message: "Expense fetched successfully.",
-      data: expense
-    });
-  } catch (err) {
-    return sendError(res, err);
-  }
-}
+    const data = await createExpenseService(req.body, adminId);
 
-async function update(req, res) {
-  try {
-    const expense = await expenseService.updateExpense(req.params.id, req.body);
-    return res.status(200).json({
-      status: true,
-      message: "Expense updated successfully.",
-      data: expense
+    res.status(201).json({
+      success: true,
+      message: "Expense created successfully",
+      data,
     });
-  } catch (err) {
-    return sendError(res, err);
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
   }
-}
+};
 
-async function destroy(req, res) {
+// GET ALL
+const getAllExpensesController = async (req, res) => {
   try {
-    await expenseService.deleteExpense(req.params.id);
-    return res.status(200).json({
-      status: true,
-      message: "Expense deleted successfully."
+    const data = await getAllExpensesService(req.query);
+
+    res.status(200).json({
+      success: true,
+      ...data,
     });
-  } catch (err) {
-    return sendError(res, err);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
-}
+};
+
+// GET SINGLE
+const getSingleExpenseController = async (req, res) => {
+  try {
+    const data = await getSingleExpenseService(req.params.id);
+
+    res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (error) {
+    res.status(404).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// UPDATE
+const updateExpenseController = async (req, res) => {
+  try {
+    const data = await updateExpenseService(req.params.id, req.body);
+
+    res.status(200).json({
+      success: true,
+      message: "Expense updated successfully",
+      data,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// DELETE
+const deleteExpenseController = async (req, res) => {
+  try {
+    await deleteExpenseService(req.params.id);
+
+    res.status(200).json({
+      success: true,
+      message: "Expense deleted successfully",
+    });
+  } catch (error) {
+    res.status(404).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 module.exports = {
-  index,
-  store,
-  show,
-  update,
-  destroy
+  createExpenseController,
+  getAllExpensesController,
+  getSingleExpenseController,
+  updateExpenseController,
+  deleteExpenseController,
 };

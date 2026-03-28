@@ -1,16 +1,31 @@
 const mongoose = require("mongoose");
 
-const expenseSchema = new mongoose.Schema(
+const expensesSchema = new mongoose.Schema(
   {
-    title: { type: String, required: true, trim: true, maxlength: 255, index: true },
-    category: { type: String, required: true, trim: true, maxlength: 255, index: true },
-    amount: { type: Number, required: true, min: 0 },
-    date: { type: Date, required: true, index: true },
-    created_by: { type: mongoose.Schema.Types.ObjectId, ref: "Admin", required: true, index: true }
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    amount: {
+      type: Number,
+      required: true,
+    },
+    category: {
+      type: String,
+      default: "General",
+    },
+    expense_date: {
+      type: Date,
+      required: true,
+    },
+    created_by: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Admin",
+      required: true,
+    },
   },
-  { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
+  { timestamps: true }
 );
 
-expenseSchema.index({ created_at: -1 });
-
-module.exports = mongoose.model("Expense", expenseSchema);
+module.exports = mongoose.model("Expense", expensesSchema);
