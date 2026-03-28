@@ -8,6 +8,7 @@ const visitorRoutes = require("./module/admin/visitors/visitor.route");
 const employeeRoutes = require("./module/admin/employee/employee.route");
 const attendenceRoutes = require("./module/admin/Attendence/attendence.route");
 const evaluationReportRoutes = require("./module/admin/evaluation/evaluationreport.route");
+<<<<<<< HEAD
 const employeeLoginRoutes = require("./module/employee/login/employee.login.routes");
 const employeeattendenceRoutes = require("./module/employee/attendence/attendence.routes");
 const employeeprofileRoutes = require("./module/employee/profile/profileRoutes");
@@ -23,6 +24,12 @@ const proposalRoutes = require("./module/admin/proposal/proposal.routes");
 
 
 
+=======
+const expenseRoutes = require("./module/admin/expense/expense.route");
+const interviewRoutes = require("./module/admin/interview/interview.route");
+const hrmisRoutes = require("./module/admin/HR mis Report/hrmis.route");
+const tourConveyanceRoutes  = require("./module/admin/tour conveyance/tourConveyance.routes");
+>>>>>>> 98ec6c272b6e4bbe1924daf1e3a2fd0886fe4c87
 
 const app = express();
 app.use(express.json());
@@ -43,6 +50,7 @@ app.use("/api/visitors", visitorRoutes);
 app.use("/api/employees", employeeRoutes);
 app.use("/api/attendence", attendenceRoutes);
 app.use("/api/evaluationreports", evaluationReportRoutes);
+<<<<<<< HEAD
 app.use("/api/employee", employeeLoginRoutes);
 app.use("/api/employee/attendence", employeeattendenceRoutes);
 app.use("/api/employee/profile",employeeprofileRoutes );
@@ -55,6 +63,12 @@ app.use("/api/admin/expense", expenseRoutes);
 app.use("/api/admin/leads", leadRoutes);
 app.use("/api/admin/lead-interaction", leadInteractionRoutes);
 app.use("/api/admin/proposal", proposalRoutes);
+=======
+app.use("/api/expenses", expenseRoutes);
+app.use("/api/interviews", interviewRoutes);
+app.use("/api/hrmis", hrmisRoutes);
+app.use("/api/tours", tourConveyanceRoutes);
+>>>>>>> 98ec6c272b6e4bbe1924daf1e3a2fd0886fe4c87
 
 
 const PORT = process.env.PORT || 3000;
