@@ -82,11 +82,32 @@ async function login(req, res) {
   }
 }
 
+async function changePassword(req, res) {
+  try {
+    const adminId = req.auth?.sub;
+    const { new_password } = req.body;
+
+    if (!adminId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    await adminService.changePassword(adminId, new_password);
+
+    return res.status(200).json({
+      success: true,
+      message: "Password changed successfully"
+    });
+  } catch (err) {
+    return sendError(res, err);
+  }
+}
+
 module.exports = {
   createAdmin,
   listAdmins,
   getAdmin,
   updateAdmin,
   deleteAdmin,
-  login
+  login,
+  changePassword
 };

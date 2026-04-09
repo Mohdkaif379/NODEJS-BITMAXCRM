@@ -12,6 +12,7 @@ const expenseRoutes = require("./module/admin/expense/expense.routes");
 const interviewRoutes = require("./module/admin/interview/interview.route");
 const hrmisRoutes = require("./module/admin/HR mis Report/hrmis.route");
 const tourConveyanceRoutes  = require("./module/admin/tour conveyance/tourConveyance.routes");
+const dashboardRoutes  = require("./module/admin/dashboard/dashboard.routes");
 
 const app = express();
 app.use(express.json());
@@ -36,6 +37,7 @@ app.use("/api/expenses", expenseRoutes);
 app.use("/api/interviews", interviewRoutes);
 app.use("/api/hrmis", hrmisRoutes);
 app.use("/api/tours", tourConveyanceRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 
 const PORT = process.env.PORT || 3000;

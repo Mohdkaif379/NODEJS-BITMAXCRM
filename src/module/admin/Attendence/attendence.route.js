@@ -77,5 +77,7 @@ router.put(
   attendenceController.update
 );
 router.delete("/delete/:id", validateObjectIdParam("id"), attendenceController.destroy);
+router.get("/monthly", attendenceController.monthlyAttendence);
+
 
 module.exports = router;

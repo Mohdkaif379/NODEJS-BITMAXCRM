@@ -529,6 +529,143 @@ async function deleteAttendence(id) {
   if (!attendance) throw Object.assign(new Error("Attendance not found."), { statusCode: 404 });
   return attendance;
 }
+function getMonthIndex(monthName) {
+  const months = {
+    january: "01",
+    february: "02",
+    march: "03",
+    april: "04",
+    may: "05",
+    june: "06",
+    july: "07",
+    august: "08",
+    september: "09",
+    october: "10",
+    november: "11",
+    december: "12"
+  };
+
+  return months[String(monthName).toLowerCase()];
+}
+
+async function getMonthlyAttendence(employee_id, month, year) {
+  if (!mongoose.Types.ObjectId.isValid(employee_id)) {
+    throw Object.assign(new Error("Invalid employee_id"), { statusCode: 400 });
+  }
+
+  if (!month || !year) {
+    throw Object.assign(new Error("month and year are required"), { statusCode: 400 });
+  }
+
+  const monthMap = {
+    january: "01",
+    february: "02",
+    march: "03",
+    april: "04",
+    may: "05",
+    june: "06",
+    july: "07",
+    august: "08",
+    september: "09",
+    october: "10",
+    november: "11",
+    december: "12"
+  };
+
+  const monthNumber = monthMap[month.toLowerCase()];
+  if (!monthNumber) {
+    throw Object.assign(new Error("Invalid month name"), { statusCode: 400 });
+  }
+
+  const prefix = `${year}-${monthNumber}`;
+
+  const employee = await Employee.findById(employee_id).lean();
+  if (!employee) {
+    throw Object.assign(new Error("Employee not found"), { statusCode: 404 });
+  }
+
+  // 🔹 get all dates of month
+  const daysInMonth = new Date(year, parseInt(monthNumber), 0).getDate();
+  const allDates = [];
+
+  for (let i = 1; i <= daysInMonth; i++) {
+    const day = String(i).padStart(2, "0");
+    allDates.push(`${year}-${monthNumber}-${day}`);
+  }
+
+  const rows = await Attendence.find({
+    employee_id,
+    date: { $regex: new RegExp(`^${prefix}-`) }
+  }).lean();
+
+  const mapByDate = new Map(rows.map((r) => [r.date, r]));
+
+  // 🔹 counters
+  let present = 0;
+  let halfday = 0;
+  let absent = 0;
+  let holiday = 0;
+
+  const data = allDates.map((date) => {
+    const row = mapByDate.get(date);
+
+    if (!row) {
+      const status = isSunday(date) ? "holiday" : "absent";
+
+      if (status === "holiday") holiday++;
+      else absent++;
+
+      return {
+        employee,
+        employee_id,
+        date,
+        mark_in: null,
+        mark_out: null,
+        break_start: null,
+        break_end: null,
+        status,
+        marked_at: {
+          mark_in: null,
+          start_break: null,
+          break_out: null,
+          mark_out: null
+        }
+      };
+    }
+
+    const x = transformAttendence(row);
+    x.employee = employee;
+    x.employee_id = employee_id;
+
+    const status = resolveAttendanceStatus({
+      date,
+      markIn: x.mark_in,
+      markOut: x.mark_out,
+      currentStatus: x.status
+    });
+
+    x.status = status;
+
+    // count increment
+    if (status === "present") present++;
+    else if (status === "halfday") halfday++;
+    else if (status === "holiday") holiday++;
+    else absent++;
+
+    return x;
+  });
+
+  return {
+    summary: {
+      total_days: daysInMonth,
+      present,
+      halfday,
+      absent,
+      holiday
+    },
+    data
+  };
+}
 
 module.exports = {
   indexAttendence,
@@ -538,5 +675,6 @@ module.exports = {
   breakStart,
   breakEnd,
   updateAttendence,
-  deleteAttendence
+  deleteAttendence,
+  getMonthlyAttendence
 };

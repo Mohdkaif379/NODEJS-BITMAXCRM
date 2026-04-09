@@ -98,6 +98,7 @@ const endBreakService = async (employee_id, profile_image) => {
   return record;
 };
 
+
 module.exports = {
   markInService,
   markOutService,

@@ -106,6 +106,25 @@ async function destroy(req, res) {
     return sendError(res, err);
   }
 }
+async function monthlyAttendence(req, res) {
+  try {
+    const { employee_id, month, year } = req.query;
+
+    const result = await attendenceService.getMonthlyAttendence(
+      employee_id,
+      month,
+      year
+    );
+
+    return res.status(200).json({
+      status: true,
+      message: "Monthly attendance fetched successfully.",
+      ...result
+    });
+  } catch (err) {
+    return sendError(res, err);
+  }
+}
 
 module.exports = {
   index,
@@ -115,5 +134,6 @@ module.exports = {
   breakStart,
   breakEnd,
   update,
-  destroy
+  destroy,
+  monthlyAttendence
 };

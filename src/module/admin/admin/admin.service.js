@@ -138,6 +138,26 @@ async function loginAdmin(email, password) {
 
   return { admin, token };
 }
+async function changePassword(adminId, newPassword) {
+  if (!newPassword) {
+    throw Object.assign(new Error("New password is required"), { statusCode: 400 });
+  }
+
+  // hash password
+  const hashedPassword = await bcrypt.hash(String(newPassword), 10);
+
+  const admin = await Admin.findByIdAndUpdate(
+    adminId,
+    { password: hashedPassword },
+    { new: true }
+  );
+
+  if (!admin) {
+    throw Object.assign(new Error("Admin not found"), { statusCode: 404 });
+  }
+
+  return true;
+}
 
 module.exports = {
   createAdmin,
@@ -145,5 +165,6 @@ module.exports = {
   getAdminById,
   updateAdmin,
   deleteAdmin,
-  loginAdmin
+  loginAdmin,
+  changePassword
 };

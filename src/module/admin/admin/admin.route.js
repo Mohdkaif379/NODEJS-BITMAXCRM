@@ -72,6 +72,13 @@ router.put(
 // Optional: update by id
 
 router.delete("/delete", authAdmin, validateAuthSubObjectId, adminController.deleteAdmin);
+router.put(
+  "/change-password",
+  authAdmin,
+  validateAuthSubObjectId,
+  requireFields(["new_password"]),
+  adminController.changePassword
+);
 
 router.use((err, _req, res, next) => {
   if (!err) return next();
