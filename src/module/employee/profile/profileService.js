@@ -1,4 +1,4 @@
-const Employee = require("../../admin/employee/employee.model"); // ✅ same name use karoconst bcrypt = require("bcryptjs");
+const Employee = require("../../admin/employee/employee.model");
 const bcrypt = require("bcryptjs");
 
 const updateProfile = async (employeeId, data) => {

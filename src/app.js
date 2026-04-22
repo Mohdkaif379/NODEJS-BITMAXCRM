@@ -16,7 +16,6 @@ const dashboardRoutes  = require("./module/admin/dashboard/dashboard.routes");
 
 const app = express();
 app.use(express.json());
-app.use("/uploads", express.static("uploads"));
 
 connectDB();
 

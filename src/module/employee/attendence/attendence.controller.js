@@ -1,4 +1,5 @@
 const { markInService, markOutService,startBreakService, endBreakService  } = require("./attendence.service");
+const { uploadMulterFile } = require("../../../core/config/cloudinary");
 
 // MARK IN Controller
 const markInController = async (req, res) => {
@@ -7,8 +8,10 @@ const markInController = async (req, res) => {
     if (!employee_id)
       return res.status(400).json({ success: false, message: "Employee ID is required" });
 
-    let profile_image = null;
-    if (req.file) profile_image = `http://localhost:3000/uploads/${req.file.filename}`;
+    const profile_image = await uploadMulterFile(req.file, {
+      folder: "bitmax/attendence/mark_in",
+      resource_type: "image",
+    });
 
     const data = await markInService(employee_id, profile_image);
 
@@ -31,7 +34,10 @@ const markOutController = async (req, res) => {
     if (!status || !["yes","no"].includes(status.toLowerCase()))
       return res.status(400).json({ success: false, message: "Status must be 'yes' or 'no'" });
 
-    const profile_image = `http://localhost:3000/uploads/${req.file.filename}`;
+    const profile_image = await uploadMulterFile(req.file, {
+      folder: "bitmax/attendence/mark_out",
+      resource_type: "image",
+    });
 
     const data = await markOutService(employee_id, profile_image, status.toLowerCase());
 
@@ -50,7 +56,10 @@ const startBreakController = async (req, res) => {
     if (!req.file)
       return res.status(400).json({ success: false, message: "Profile image is required to start break" });
 
-    const profile_image = `http://localhost:3000/uploads/${req.file.filename}`;
+    const profile_image = await uploadMulterFile(req.file, {
+      folder: "bitmax/attendence/break_start",
+      resource_type: "image",
+    });
 
     const data = await startBreakService(employee_id, profile_image);
     res.status(200).json({ success: true, message: "Break started successfully", data });
@@ -69,7 +78,10 @@ const endBreakController = async (req, res) => {
     if (!req.file)
       return res.status(400).json({ success: false, message: "Profile image is required to end break" });
 
-    const profile_image = `http://localhost:3000/uploads/${req.file.filename}`;
+    const profile_image = await uploadMulterFile(req.file, {
+      folder: "bitmax/attendence/break_end",
+      resource_type: "image",
+    });
 
     const data = await endBreakService(employee_id, profile_image);
     res.status(200).json({ success: true, message: "Break ended successfully", data });

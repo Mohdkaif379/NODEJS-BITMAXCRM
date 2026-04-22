@@ -1,9 +1,13 @@
 const Interview = require("./interview.model");
+const { uploadMulterFile } = require("../../../core/config/cloudinary");
 
 class InterviewService {
   async createInterview(data, file) {
     if (file) {
-      data.candidateResume = file.path;
+      data.candidateResume = await uploadMulterFile(file, {
+        folder: "bitmax/interviews/resumes",
+        resource_type: "auto",
+      });
     }
 
     return await Interview.create(data);
@@ -19,7 +23,10 @@ class InterviewService {
 
   async updateInterview(id, data, file) {
     if (file) {
-      data.candidateResume = file.path;
+      data.candidateResume = await uploadMulterFile(file, {
+        folder: "bitmax/interviews/resumes",
+        resource_type: "auto",
+      });
     }
 
     return await Interview.findByIdAndUpdate(id, data, {

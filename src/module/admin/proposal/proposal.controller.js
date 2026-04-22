@@ -5,13 +5,19 @@ const {
   updateProposalService,
   deleteProposalService,
 } = require("./proposal.service");
+const { uploadMulterFile } = require("../../../core/config/cloudinary");
 
 // CREATE
 const createProposalController = async (req, res) => {
   try {
+    const uploadedFile = await uploadMulterFile(req.file, {
+      folder: "bitmax/proposals/files",
+      resource_type: "auto",
+    });
+
     const data = {
       ...req.body,
-      file: req.file ? req.file.path : null, // 🔥 file upload
+      file: uploadedFile,
     };
 
     const proposal = await createProposalService(data);
@@ -66,9 +72,17 @@ const getProposalByIdController = async (req, res) => {
 // UPDATE
 const updateProposalController = async (req, res) => {
   try {
+    const uploadedFile = await uploadMulterFile(req.file, {
+      folder: "bitmax/proposals/files",
+      resource_type: "auto",
+    });
+
     const proposal = await updateProposalService(
       req.params.id,
-      req.body
+      {
+        ...req.body,
+        ...(uploadedFile ? { file: uploadedFile } : {}),
+      }
     );
 
     return res.status(200).json({

@@ -19,6 +19,12 @@ function isDataUri(value) {
   return typeof value === "string" && value.startsWith("data:");
 }
 
+function fileToDataUri(file) {
+  if (!file || !file.buffer) return null;
+  const mime = file.mimetype || "application/octet-stream";
+  return `data:${mime};base64,${file.buffer.toString("base64")}`;
+}
+
 async function uploadImage(imageInput, options = {}) {
   if (!imageInput) return null;
   if (isProbablyUrl(imageInput)) return imageInput; // already a URL
@@ -54,4 +60,9 @@ async function uploadImage(imageInput, options = {}) {
   return res.secure_url || res.url;
 }
 
-module.exports = { cloudinary, uploadImage };
+async function uploadMulterFile(file, options = {}) {
+  if (!file) return null;
+  return uploadImage(fileToDataUri(file), options);
+}
+
+module.exports = { cloudinary, uploadImage, uploadMulterFile, fileToDataUri };

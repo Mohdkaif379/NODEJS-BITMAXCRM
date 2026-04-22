@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const upload = require("../../../core/middleware/upload.middleware");
 const authVerify = require("../../../middleware/authVerify");
+const { uploadMulterFile } = require("../../../core/config/cloudinary");
 
 
 const {
@@ -15,11 +16,16 @@ router.post(
   "/apply",
   authVerify,
   upload.single("file"),
-  (req, res, next) => {
-    if (req.file) {
-      req.body.file = req.file.path;
+  async (req, res, next) => {
+    try {
+      req.body.file = await uploadMulterFile(req.file, {
+        folder: "bitmax/leaves/files",
+        resource_type: "auto",
+      });
+      next();
+    } catch (error) {
+      next(error);
     }
-    next();
   },
   createLeave
 );

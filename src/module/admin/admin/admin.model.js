@@ -15,7 +15,7 @@ const adminSchema = new mongoose.Schema(
     password: { type: String, required: true, select: false },
 
     number: { type: String, default: null, trim: true, maxlength: 255 },
-    profile_photo: { type: String, default: null, trim: true, maxlength: 255 },
+    profile_photo: { type: String, default: null, trim: true, maxlength: 1024 },
 
     role: { type: String, required: true, default: "admin", trim: true, maxlength: 255 },
     permissions: { type: mongoose.Schema.Types.Mixed, default: ["*"] },
@@ -23,7 +23,7 @@ const adminSchema = new mongoose.Schema(
     status: { type: Number, default: 1, enum: [0, 1] },
 
     bio: { type: String, default: null },
-    company_logo: { type: String, default: null, trim: true, maxlength: 255 },
+    company_logo: { type: String, default: null, trim: true, maxlength: 1024 },
     company_name: { type: String, default: null, trim: true, maxlength: 255 }
   },
   {
